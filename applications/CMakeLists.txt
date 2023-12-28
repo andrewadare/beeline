@@ -1,7 +1,9 @@
 add_executable(make_graph make_graph.cpp ${SOURCES})
+add_executable(tracking tracking_experiment.cpp ${SOURCES})
 
 set(APP_TARGETS
     make_graph
+    tracking
 )
 
 foreach(exe ${APP_TARGETS})
@@ -11,3 +13,5 @@ foreach(exe ${APP_TARGETS})
         ${PROJECT_SOURCE_DIR}/include
     )
 endforeach()
+
+target_link_libraries(tracking INTERFACE kalmanif::kalmanif)
