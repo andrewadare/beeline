@@ -1,0 +1,4 @@
+detections_file = "/Users/adare/data/capture3_left.csv"
+first_frame = 300
+last_frame = 600
+tag_to_track = 1
