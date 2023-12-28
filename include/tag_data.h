@@ -34,6 +34,4 @@ using ObsMap = std::unordered_map<int, std::unordered_map<int, TagData>>;
 int read_tag_observations(const char* path, ObsMap* obs_list,
                           IntMap* poses_by_tag);
 
-int save_g2o(const PoseGraph& g, const char* path);
-
 #endif  // __TAG_DATA_H__

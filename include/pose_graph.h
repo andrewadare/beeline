@@ -34,4 +34,7 @@ struct PoseGraph {
   bool contains(const int i, const int j) { return edges.count({i, j}) > 0; }
 };
 
+// Save graph data as a text file in g2o format
+int save_g2o(const PoseGraph& g, const char* path);
+
 #endif  // __POSE_GRAPH_H__
