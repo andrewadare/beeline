@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
 find_package(Eigen3 REQUIRED)
 find_package(manif REQUIRED)
+find_package(kalmanif REQUIRED)
 
 file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
