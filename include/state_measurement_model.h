@@ -5,8 +5,8 @@
 
 namespace kalmanif {
 
-// Measurement model h(X) for an "identity" observation h(X) = X,
-// where the estimated state is directly observed.
+// Measurement model h(X) for cases where the estimated state X is observed
+// directly, i.e. h(X) = X.
 template <typename _State>
 struct StateMeasurementModel
     : MeasurementModelBase<StateMeasurementModel<_State>>,
@@ -22,9 +22,8 @@ struct StateMeasurementModel
 
   using State = _State;
   using Scalar = typename State::Scalar;
-  // static constexpr auto Dim = State::Dim;
-  // using Measurement = Eigen::Matrix<Scalar, Dim, 1>;
   using Measurement = Eigen::Matrix<Scalar, State::DoF, 1>;
+  static constexpr auto Dim = State::Dim;
 
   StateMeasurementModel(const Eigen::Ref<Covariance<Measurement>>& R) {
     setCovariance(R);
@@ -33,11 +32,22 @@ struct StateMeasurementModel
   Measurement run(const State& x) const { return x.log().coeffs(); }
 
   // Returns Jacobians H and V as identities, since dh(X)/dX = dX/dX
+  // ^ No! See e.g. App D, sec C3 of http://arxiv.org/abs/1812.01537 for SE(3)
   Measurement run_linearized(
       const State& x, Eigen::Ref<Jacobian<Measurement, State>> H,
       Eigen::Ref<Jacobian<Measurement, Measurement>> V) const {
+    // V = x.rotation();
+    // H.template topRightCorner<Dim, State::DoF - Dim>().setZero();
+
+    // V.setIdentity();
+    // H = x.log().rjac();
+    V = x.log().rjac();
+    // V = H;
     H.setIdentity();
-    V.setIdentity();
+    // H.template topLeftCorner<Dim, Dim>() = x.rotation();
+
+    // std::cout << "V " << V.rows() << "x" << V.cols() << std::endl;
+    // std::cout << "H " << H.rows() << "x" << H.cols() << std::endl;
     return x.log().coeffs();
   }
 
