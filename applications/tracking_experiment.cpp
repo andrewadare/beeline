@@ -11,8 +11,8 @@ using namespace std;
 using manif::SE3d;
 
 using State = SE3d;
-// using KF = kalmanif::ExtendedKalmanFilter<State>;
-using KF = kalmanif::UnscentedKalmanFilterManifolds<State>;
+using KF = kalmanif::ExtendedKalmanFilter<State>;
+// using KF = kalmanif::UnscentedKalmanFilterManifolds<State>;
 using StateCovariance = kalmanif::Covariance<State>;
 using SystemModel = kalmanif::LieSystemModel<State>;
 using Control = SystemModel::Control;
@@ -91,19 +91,21 @@ int main(int argc, const char** argv) {
 
     // Check for a measurement
     if (poses_by_tag[tag_to_track].count(i) == 1) {
+      num_coasts = 0;
       const auto tag = observations.at(i).at(tag_to_track);
       // cout << tag.frame_id << " " << tag.transform << endl;
-      cout << tag.frame_id << " "
-           << (tag.transform.translation() - kf.getState().translation())
-                  .transpose()
-           << endl;
 
       // Update or (re)initialize
       if (filter_initialized) {
         y = measurement_model(tag.transform);
         kf.update(measurement_model, y);
         g_filt.add({i, NodeType::POSE, kf.getState()});
+        cout << tag.frame_id << " "
+             << (tag.transform.translation() - kf.getState().translation())
+                    .transpose()
+             << endl;
       } else {
+        cout << "initializing" << endl;
         kf.setState(tag.transform);
         kf.setCovariance(state_cov_init);
         filter_initialized = true;
