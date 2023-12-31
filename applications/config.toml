@@ -7,9 +7,9 @@ initial_position_variance = 50
 initial_rotation_variance = 50
 
 # motion model
-dt = 0.033         # video sample period [s]
-sigma_velocity = 1 # in/s
-sigma_omega = 0.1  # rad/s
+dt = 0.033           # video sample period [s]
+sigma_velocity = 0.5 # in/s
+sigma_omega = 0.1    # rad/s
 
 # Measurement uncertainties [in], [rad]
 dx = 0.2
@@ -20,4 +20,4 @@ dry = 0.2
 drz = 0.2
 
 # Tracking logic
-max_num_coasts = 5
+max_num_coasts = 2
